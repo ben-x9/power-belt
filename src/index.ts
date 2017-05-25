@@ -15,3 +15,6 @@ export const log = (...xs: Array<any>) => {
   console.log(xs.length === 1 ? xs[0] : xs)
   return last(xs)
 }
+
+export type Ar<T> = ReadonlyArray<T>
+export type OneOrMore<T> = T | Ar<T>
