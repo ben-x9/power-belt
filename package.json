@@ -14,7 +14,8 @@
     "test:watch": "npm run test -- --watch",
     "test:browser": "webpack-dev-server --config webpack/config.test.browser.js --hot"
   },
-  "dependencies": {
+  "dependencies": {},
+  "devDependencies": {
     "@types/chai": "^3.5.2",
     "@types/mocha": "^2.2.41",
     "chai": "^3.5.0",
