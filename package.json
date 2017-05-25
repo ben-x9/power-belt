@@ -2,6 +2,7 @@
   "name": "power-belt",
   "version": "1.0.0",
   "main": "build/index.js",
+  "typings": "build/index.d.ts",
   "repository": "https://github.com/bjoyx/power-belt.git",
   "author": "Ben Lambert",
   "license": "MIT",
