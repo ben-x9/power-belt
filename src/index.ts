@@ -4,6 +4,8 @@ export const isArray = (x: any): x is Array<any> => Array.isArray(x)
 export const isString = (x: any): x is string => typeof x === "string"
 export const isNum = (x: any): x is number => typeof x === "number"
 export const isBool = (x: any): x is boolean => typeof x === "boolean"
+export const isObject = (x: any): x is boolean =>
+  typeof x === "object" && !isArray(x)
 export const isUndefined = (x: any): x is undefined => typeof x === "undefined"
 export const isDefined = (x: any): x is something|null => !isUndefined(x)
 
