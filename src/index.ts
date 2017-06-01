@@ -44,49 +44,11 @@ export type Guid = string
 export type Nothing = null | undefined
 export type Maybe<T> = T | Nothing
 
-// const set = <T, K extends keyof T>(thing: T, prop: K, value: T[K]): T => {
-//   return thing
-// }
-
-// const myMap: ReadMap<number> = {
-//   a: 1,
-//   b: 2,
-//   c: 3
-// }
-// const myArray: ReadArray<number> = [1, 2, 3]
-
-
-// const myNewMap = set(myMap, "a", 5)
-// const myNewArray = set(myArray, 0, 5)
-
-
-// type T1 = keyof {[key: string]: number}
-// type T2 = keyof {[key: number]: number}
-
-
-
-
-
-
-// export const record = <T>(value: T) => value as Readonly<T>
-// export const list = <T>(value: T[]) => value as ReadArray<T>
-
-// const a = [1, 2, 3]
-// type ka<T> = keyof ReadArray<T>
-
-// type Set = <R, K extends keyof R>(rec: R, key: K, val: R[K]) => R
-// type Set = <T>(vec: Array<T>, index: number, val: R[K]) => R
-
-// const set: Set = (rec: any, key: any, val: any) => {
-
-// }
-
-
-
-// type Wrapper<T> = {
-//     set<K extends keyof T>(k: K, v: T[K]) : IWrapper<T>
-//     setIn<K extends keyof T, K2 extends keyof T[K]>(k: K, k2: K2, v: T[K][K2]) : IWrapper<T>
-//     setIn<K extends keyof T, K2 extends keyof T[K], K3 extends keyof T[K][K2]>(k: K, k2: K2, k3: K3, v: T[K][K2][K3]): IWrapper<T>
-//     setIn<K extends keyof T, K2 extends keyof T[K], K3 extends keyof T[K][K2], K4 extends keyof T[K][K2][K3]>(k: K, k2: K2, k3: K3, k4: K4, v: T[K][K2][K3][K4]): IWrapper<T>
-//    // .......
-// }
+export function set<T>(obj: T, props: Partial<T>): T
+export function set<T, K extends keyof T>(obj: T, key: K, val: T[K]): T
+export function set<T, K extends keyof T>
+    (obj: T, propsOrKey: Partial<T> | K, val?: T[K]) {
+  return Object.assign(obj, isString(propsOrKey) ?
+    {[propsOrKey as string]: val} :
+    propsOrKey)
+}
