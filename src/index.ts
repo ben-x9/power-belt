@@ -19,6 +19,11 @@ export const log = (...xs: Array<any>) => {
   return last(xs)
 }
 
+export const debug = <T>(expr: T): T => {
+  debugger
+  return expr
+}
+
 export type List<T> = ReadonlyArray<T>
 
 export type Dict<T> = {
