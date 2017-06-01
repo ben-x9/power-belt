@@ -39,6 +39,10 @@ export const list = <T>(...x: Array<T>): List<T> => x
 export const dict = <T>(object: Obj<T>): Dict<T> => object
 export const record = <T>(object: T): Record<T> => object
 
+export type Update<ActionT> = (update: ActionT) => void
+export type Guid = string
+export type Nothing = null | undefined
+export type Maybe<T> = T | Nothing
 
 // const set = <T, K extends keyof T>(thing: T, prop: K, value: T[K]): T => {
 //   return thing
