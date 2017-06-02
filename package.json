@@ -8,7 +8,7 @@
   "license": "MIT",
   "scripts": {
     "install": "npm run build",
-    "build": "tsc",
+    "build": "cp tsconfig/build.json tsconfig.json; tsc; cp tsconfig/editor.json tsconfig.json",
     "lint": "a=`find src test -type f | grep '\\.ts$'`; tslint -p tsconfig.json --type-check $a",
     "test": "mocha-webpack",
     "test:watch": "npm run test -- --watch",

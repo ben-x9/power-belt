@@ -1,0 +1,1 @@
+extract json commonalities into a base.json file and create a merge script

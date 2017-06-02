@@ -41,10 +41,7 @@
   },
   "compileOnSave": false,
   "include": [
-    "**/*"
-  ],
-  "exclude": [
-    "node_modules/**/*"
+    "src/**/*"
   ],
   "vscode": {
     "rewriteTsconfig": true
