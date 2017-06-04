@@ -31,4 +31,13 @@ describe("set", () => {
     assert.notEqual($array, array)
     assert.deepEqual($array, [1, 22, 3])
   })
+  it("should remove an array value at index when passed an array and a null or undefined val", () => {
+    const array = [1, 2, 3]
+    const $array = set(array, 1, null)
+    assert.notEqual($array, array)
+    assert.deepEqual($array, [1, 3])
+    const $$array = set(array, 1, undefined)
+    assert.notEqual($$array, array)
+    assert.deepEqual($$array, [1, 3])
+  })
 })

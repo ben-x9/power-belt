@@ -42,7 +42,7 @@ export type Maybe<T> = T | Nothing
 
 export function set<T>(object: T, props: Partial<T>): T
 export function set<T, K extends keyof T>(object: T, key: K, val: T[K]): T
-export function set<T>(list: List<T>, index: number, val: T): List<T>
+export function set<T>(list: List<T>, index: number, val: Maybe<T>): List<T>
 export function set<T, K extends keyof T>(
     objOrList: T | List<T>,
     propsOrKeyOrIndex: Partial<T> | K | number,
@@ -52,7 +52,11 @@ export function set<T, K extends keyof T>(
     const index = propsOrKeyOrIndex as number
     const $val = val as T
     const $list = list.slice() // clone the list
-    $list.splice(index, 1, $val) // replace the val at index
+    if (exists(val)) {
+      $list.splice(index, 1, $val) // replace the val at index
+    } else {
+      $list.splice(index, 1) // remove the val at index
+    }
     return $list
   } else {
     const object = objOrList
