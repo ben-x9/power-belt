@@ -68,5 +68,14 @@ export function set<T, K extends keyof T>(
   }
 }
 
+export const insert = <T>(list: List<T>, index: number, val: Maybe<T>): List<T> => {
+  if (exists(val)) {
+    const $list = list.slice() // clone the list
+    $list.splice(index, 0, val) // insert the val at index
+    return $list
+  }
+  return list
+}
+
 export interface DeepList<T> extends List<T | DeepList<T>> {}
 export type Deep<T> = T | DeepList<T>

@@ -1,5 +1,5 @@
 import {assert} from "chai"
-import {isArray, set, record} from "src"
+import {isArray, set, record, insert} from "src"
 
 describe("isArray", () => {
   it("should return true when passed an array", () => {
@@ -39,5 +39,14 @@ describe("set", () => {
     const $$array = set(array, 1, undefined)
     assert.notEqual($$array, array)
     assert.deepEqual($$array, [1, 3])
+  })
+})
+
+describe("insert", () => {
+  it("should insert an item into an array", () => {
+    const array = [1, 2, 3]
+    const $array = insert(array, 0, 4)
+    assert.notEqual($array, array)
+    assert.deepEqual($array, [4, 1, 2, 3])
   })
 })
