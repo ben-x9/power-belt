@@ -40,6 +40,16 @@ describe("set", () => {
     assert.notEqual($$array, array)
     assert.deepEqual($$array, [1, 3])
   })
+  it("should not do anything if values are the same", () => {
+    const object = {a: 1, b: 2, c: 3}
+    const $object = set(object, "a", 1)
+    assert.strictEqual($object, object)
+    const $$object = set(object, {a: 1})
+    assert.strictEqual($$object, object)
+    const array = [1, 2, 3]
+    const $array = set(array, 0, 1)
+    assert.strictEqual($array, array)
+  })
 })
 
 describe("insert", () => {

@@ -101,8 +101,8 @@
       }
     ],
     "variable-name": [
-      true,
-      "ban-keywords"
+      false //,
+      // "ban-keywords"
     ],
     "whitespace": [
       true,

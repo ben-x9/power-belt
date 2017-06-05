@@ -1,3 +1,7 @@
+import {some} from "lodash"
+
+export const has = some
+
 export type something = boolean|number|string|object
 
 export const isArray = (x: any): x is Array<any> => Array.isArray(x)
@@ -48,23 +52,40 @@ export function set<T, K extends keyof T>(
     propsOrKeyOrIndex: Partial<T> | K | number,
     val?: T[K] | T) {
   if (isList(objOrList)) {
-    const list = objOrList as List<T>
+    let list = objOrList as List<T>
     const index = propsOrKeyOrIndex as number
     const $val = val as T
-    const $list = list.slice() // clone the list
-    if (exists(val)) {
-      $list.splice(index, 1, $val) // replace the val at index
-    } else {
-      $list.splice(index, 1) // remove the val at index
+    if (val !== list[index]) {
+      const $list = list.slice() // clone the list
+      if (exists(val)) {
+        $list.splice(index, 1, $val) // replace the val at index
+      } else {
+        $list.splice(index, 1) // remove the val at index
+      }
+      list = $list
     }
-    return $list
+    return list
   } else {
-    const object = objOrList
+    const object = objOrList as T
     const propsOrKey = propsOrKeyOrIndex
     const $val = val as T[K]
-    return Object.assign({}, object, isString(propsOrKey) ?
-      {[propsOrKey as string]: $val} :
-      propsOrKey)
+    if (isString(propsOrKey)) {
+      const key = propsOrKey
+      const $val = val as T[K]
+      if (object[key] !== val) {
+        return Object.assign({}, object, {[key as string]: val})
+      } else {
+        return object
+      }
+    } else {
+      const props = propsOrKey as any
+      if (has(props, (val, key: keyof Partial<T>) =>
+          props[key] !== object[key])) {
+        return Object.assign({}, object, props)
+      } else {
+        return object
+      }
+    }
   }
 }
 
