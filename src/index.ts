@@ -19,7 +19,7 @@ export const exists = (x: any): x is something => isDefined(x) && x !== null
 export const last = (x: Array<any>) => x[x.length - 1]
 
 export const log = (...xs: Array<any>) => {
-  console.log(xs.length === 1 ? xs[0] : xs)
+  console.log(xs[0], ...xs.slice(1))
   return last(xs)
 }
 
