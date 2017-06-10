@@ -25,11 +25,19 @@ describe("set", () => {
     assert.notEqual($object, object)
     assert.deepEqual($object, {a: 11, b: 22, c: 3})
   })
-  it("should set an array value at index when passed an array", () => {
+  it("should set an array value at index when passed an array, index and value", () => {
     const array = [1, 2, 3]
     const $array = set(array, 1, 22)
     assert.notEqual($array, array)
     assert.deepEqual($array, [1, 22, 3])
+  })
+  it("should set an array value by id when passed an array, value and no index", () => {
+    const array =
+      [{id: 1, val: "Fri"}, {id: 2, val: "Sat"}, {id: 3, val: "Mon"}]
+    const $array = set(array, {id: 3, val: "Sun"})
+    assert.notEqual($array, array)
+    assert.deepEqual($array,
+      [{id: 1, val: "Fri"}, {id: 2, val: "Sat"}, {id: 3, val: "Sun"}])
   })
   it("should remove an array value at index when passed an array and a null or undefined val", () => {
     const array = [1, 2, 3]

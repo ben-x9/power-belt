@@ -1,4 +1,4 @@
-import {some} from "lodash"
+import {some, findIndex} from "lodash"
 
 export const has = some
 
@@ -44,30 +44,42 @@ export type Guid = string
 export type Nothing = null | undefined
 export type Maybe<T> = T | Nothing
 
+export interface HasId {id: string|number}
+
 export function set<T>(object: T, props: Partial<T>): T
 export function set<T, K extends keyof T>(object: T, key: K, val: T[K]): T
 export function set<T>(list: List<T>, index: number, val: Maybe<T>): List<T>
+export function set<T extends HasId>(list: List<T>, val: T): List<T>
 export function set<T, K extends keyof T>(
     objOrList: T | List<T>,
-    propsOrKeyOrIndex: Partial<T> | K | number,
-    val?: T[K] | T) {
+    propsOrKeyOrIndexOrVal: Partial<T> | K | number | Maybe<T>,
+    val?: T[K] | Maybe<T>) {
   if (isList(objOrList)) {
     let list = objOrList as List<T>
-    const index = propsOrKeyOrIndex as number
-    const $val = val as T
-    if (val !== list[index]) {
-      const $list = list.slice() // clone the list
-      if (exists(val)) {
-        $list.splice(index, 1, $val) // replace the val at index
-      } else {
-        $list.splice(index, 1) // remove the val at index
+    const update = (index: number, val: Maybe<T>) => {
+      if (index >= 0 && val !== list[index]) {
+        const $list = list.slice() // clone the list
+        if (exists(val)) {
+          $list.splice(index, 1, val) // replace the val at index
+        } else {
+          $list.splice(index, 1) // remove the val at index
+        }
+        list = $list
       }
-      list = $list
+    }
+    if (isNum(propsOrKeyOrIndexOrVal)) {
+      const index = propsOrKeyOrIndexOrVal as number
+      update(index, val as Maybe<T>)
+    } else {
+      const $val = propsOrKeyOrIndexOrVal as T & HasId
+      const $list = list as any as List<HasId>
+      const index = findIndex($list, {id: $val.id})
+      update(index, $val)
     }
     return list
   } else {
     const object = objOrList as T
-    const propsOrKey = propsOrKeyOrIndex
+    const propsOrKey = propsOrKeyOrIndexOrVal
     const $val = val as T[K]
     if (isString(propsOrKey)) {
       const key = propsOrKey
