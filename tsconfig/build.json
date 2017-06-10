@@ -24,7 +24,7 @@
     "outDir": "build",
     "newLine": "LF",
     "removeComments": true,
-    "sourceMap": false,
+    "sourceMap": true,
     "target": "es5",
     "lib": [
       "dom",
