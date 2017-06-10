@@ -110,14 +110,11 @@ export const insert = <T>(list: List<T>, index: number, val: Maybe<T>): List<T> 
   return list
 }
 
-export const push = <T>(list: List<T>, val: Maybe<T>): List<T> => {
-  if (exists(val)) {
-    const $list = list.slice() // clone the list
-    $list.push(val)
-    return $list
-  }
-  return list
-}
+export const append = <T>(list: List<T>, val: Maybe<T>): List<T> =>
+  exists(val) ? [...list, val] : list
+
+export const prepend = <T>(list: List<T>, val: Maybe<T>): List<T> =>
+  exists(val) ? [val, ...list] : list
 
 export interface DeepList<T> extends List<T | DeepList<T>> {}
 export type Deep<T> = T | DeepList<T>
