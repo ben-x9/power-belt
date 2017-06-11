@@ -162,3 +162,13 @@ export const join = <T>(...contents: ZeroOrMore<T>[]): ZeroOrMore<T> => {
          result.length === 1 ? result[0] :
                                result
 }
+
+export const each = <T>(content: ZeroOrMore<T>, callback: (item: T) => void) => {
+  if (exists(content)) {
+    if (isOne(content)) {
+      callback(content)
+    } else {
+      for (const item of content) callback(item)
+    }
+  }
+}
