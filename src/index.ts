@@ -38,6 +38,7 @@ export const dict = <T>(object: Obj<T>): Dict<T> => object
 export const record = <T>(object: T): Record<T> => object
 
 export type OneOrMore<T> = T | List<T>
+export type ZeroOrMore<T> = Maybe<OneOrMore<T>>
 
 export type Update<ActionT> = (update: ActionT) => void
 export type Guid = string
