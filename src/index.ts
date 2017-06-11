@@ -116,5 +116,8 @@ export const append = <T>(list: List<T>, val: Maybe<T>): List<T> =>
 export const prepend = <T>(list: List<T>, val: Maybe<T>): List<T> =>
   exists(val) ? [val, ...list] : list
 
+export const remove = <T>(list: List<T>, index: number): List<T> =>
+  set(list, index, null)
+
 export interface DeepList<T> extends List<T | DeepList<T>> {}
 export type Deep<T> = T | DeepList<T>
