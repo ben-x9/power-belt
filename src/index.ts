@@ -126,25 +126,25 @@ export type Deep<T> = T | DeepList<T>
 
 export const extract = <T extends Object>
     (content: ZeroOrMore<T>, predicate: Partial<T>):
-    {content: ZeroOrMore<T>, extracted: Maybe<T>} => {
+    {remaining: ZeroOrMore<T>, match: Maybe<T>} => {
   const key = Object.keys(predicate)[0] as keyof T
   const val = predicate[key]
-  let extracted: Maybe<T> = null
+  let match: Maybe<T> = null
   if (content) {
     if (isOne(content)) {
       if (content[key] === val) {
         content = null
-        extracted = content
+        match = content
       }
     } else {
       const i = findIndex(content, predicate)
       if (i >= 0) {
-        extracted = content[i]
+        match = content[i]
         content = remove(content, i)
       }
     }
   }
-  return {content, extracted}
+  return {remaining: content, match}
 }
 
 export const join = <T>(...contents: ZeroOrMore<T>[]): ZeroOrMore<T> => {
