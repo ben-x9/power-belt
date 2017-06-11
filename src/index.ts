@@ -126,7 +126,7 @@ export type Deep<T> = T | DeepList<T>
 
 export const extract = <T extends Object>
     (content: ZeroOrMore<T>, predicate: Partial<T>):
-    [ZeroOrMore<T>, Maybe<T>] => {
+    {content: ZeroOrMore<T>, extracted: Maybe<T>} => {
   const key = Object.keys(predicate)[0] as keyof T
   const val = predicate[key]
   let extracted: Maybe<T> = null
@@ -144,7 +144,7 @@ export const extract = <T extends Object>
       }
     }
   }
-  return [content, extracted]
+  return {content, extracted}
 }
 
 export const join = <T>(...contents: ZeroOrMore<T>[]): ZeroOrMore<T> => {
