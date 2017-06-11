@@ -124,14 +124,11 @@ export const remove = <T>(list: List<T>, index: number): List<T> =>
 export interface DeepList<T> extends List<T | DeepList<T>> {}
 export type Deep<T> = T | DeepList<T>
 
-export type Predicate<T, K extends keyof T> = {K: T[K]}
-
-export const extract = <T extends Object, K extends keyof T>
-    (content: ZeroOrMore<T>, predicate: Predicate<T, K>):
+export const extract = <T extends Object>
+    (content: ZeroOrMore<T>, predicate: Partial<T>):
     [ZeroOrMore<T>, Maybe<T>] => {
-  const $key = Object.keys(predicate)[0] as keyof typeof predicate
-  const val = predicate[$key]
-  const key = $key as keyof T
+  const key = Object.keys(predicate)[0] as keyof T
+  const val = predicate[key]
   let extracted: Maybe<T> = null
   if (content) {
     if (isOne(content)) {
