@@ -6,6 +6,8 @@ export type something = boolean|number|string|object
 
 export const isArray = (x: any): x is Array<any> => Array.isArray(x)
 export const isList = isArray
+export const isMany = <T>(x: OneOrMore<T>): x is Array<T> => Array.isArray(x)
+export const isOne = <T>(x: OneOrMore<T>): x is T => !Array.isArray(x)
 export const isString = (x: any): x is string => typeof x === "string"
 export const isNum = (x: any): x is number => typeof x === "number"
 export const isBool = (x: any): x is boolean => typeof x === "boolean"
@@ -13,7 +15,6 @@ export const isObject = (x: any): x is boolean =>
   typeof x === "object" && !isArray(x)
 export const isUndefined = (x: any): x is undefined => typeof x === "undefined"
 export const isDefined = (x: any): x is something|null => !isUndefined(x)
-
 export const exists = (x: any): x is something => isDefined(x) && x !== null
 
 export const last = (x: Array<any>) => x[x.length - 1]
@@ -122,3 +123,45 @@ export const remove = <T>(list: List<T>, index: number): List<T> =>
 
 export interface DeepList<T> extends List<T | DeepList<T>> {}
 export type Deep<T> = T | DeepList<T>
+
+export type Predicate<T, K extends keyof T> = {K: T[K]}
+
+export const extract = <T extends Object, K extends keyof T>
+    (content: ZeroOrMore<T>, predicate: Predicate<T, K>):
+    [ZeroOrMore<T>, Maybe<T>] => {
+  const $key = Object.keys(predicate)[0] as keyof typeof predicate
+  const val = predicate[$key]
+  const key = $key as keyof T
+  let extracted: Maybe<T> = null
+  if (content) {
+    if (isOne(content)) {
+      if (content[key] === val) {
+        content = null
+        extracted = content
+      }
+    } else {
+      const i = findIndex(content, predicate)
+      if (i >= 0) {
+        extracted = content[i]
+        content = remove(content, i)
+      }
+    }
+  }
+  return [content, extracted]
+}
+
+export const join = <T>(...contents: ZeroOrMore<T>[]): ZeroOrMore<T> => {
+  const result: T[] = []
+  for (let content of contents) {
+    if (exists(content)) {
+      if (isOne(content)) {
+        result.push(content)
+      } else {
+        result.push(...content)
+      }
+    }
+  }
+  return result.length === 0 ? null :
+         result.length === 1 ? result[0] :
+                               result
+}
