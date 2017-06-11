@@ -39,7 +39,6 @@ export const dict = <T>(object: Obj<T>): Dict<T> => object
 export const record = <T>(object: T): Record<T> => object
 
 export type OneOrMore<T> = T | List<T>
-export type ZeroOrMore<T> = Maybe<OneOrMore<T>>
 
 export type Update<ActionT> = (update: ActionT) => void
 export type Guid = string
@@ -125,51 +124,15 @@ export interface DeepList<T> extends List<T | DeepList<T>> {}
 export type Deep<T> = T | DeepList<T>
 
 export const extract = <T extends Object>
-    (content: ZeroOrMore<T>, predicate: Partial<T>):
-    {remaining: ZeroOrMore<T>, match: Maybe<T>} => {
+    (items: List<T>, predicate: Partial<T>):
+    {remaining: List<T>, match: Maybe<T>} => {
   const key = Object.keys(predicate)[0] as keyof T
   const val = predicate[key]
   let match: Maybe<T> = null
-  if (content) {
-    if (isOne(content)) {
-      if (content[key] === val) {
-        content = null
-        match = content
-      }
-    } else {
-      const i = findIndex(content, predicate)
-      if (i >= 0) {
-        match = content[i]
-        content = remove(content, i)
-        if (content.length === 1) content = content[0]
-      }
-    }
+  const i = findIndex(items, predicate)
+  if (i >= 0) {
+    match = items[i]
+    items = remove(items, i)
   }
-  return {remaining: content, match}
-}
-
-export const join = <T>(...contents: ZeroOrMore<T>[]): ZeroOrMore<T> => {
-  const result: T[] = []
-  for (let content of contents) {
-    if (exists(content)) {
-      if (isOne(content)) {
-        result.push(content)
-      } else {
-        result.push(...content)
-      }
-    }
-  }
-  return result.length === 0 ? null :
-         result.length === 1 ? result[0] :
-                               result
-}
-
-export const each = <T>(content: ZeroOrMore<T>, callback: (item: T) => void) => {
-  if (exists(content)) {
-    if (isOne(content)) {
-      callback(content)
-    } else {
-      for (const item of content) callback(item)
-    }
-  }
+  return {remaining: items, match}
 }
