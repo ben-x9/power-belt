@@ -1,5 +1,5 @@
 import {assert} from "chai"
-import {isArray, set, record, insert, append, prepend} from "src"
+import {isArray, set, record, insert, append, prepend, clean} from "src"
 
 describe("isArray", () => {
   it("should return true when passed an array", () => {
@@ -84,5 +84,14 @@ describe("prepend", () => {
     const $array = prepend(array, 0)
     assert.notEqual($array, array)
     assert.deepEqual($array, [0, 1, 2, 3])
+  })
+})
+
+describe("clean", () => {
+  it("should remove all null and undefined values from the array", () => {
+    const array = [1, 2, null, 4, 5]
+    const $array = clean(array)
+    assert.notEqual($array as typeof array, array)
+    assert.deepEqual($array, [1, 2, 4, 5])
   })
 })

@@ -1,4 +1,4 @@
-import {some, findIndex} from "lodash"
+import {some, findIndex, reject} from "lodash"
 
 export const has = some
 
@@ -154,3 +154,6 @@ export function extract<T extends Object>(items: List<T>, predicate: Partial<T>,
     return {remaining, match}
   }
 }
+
+export const clean = <T>(items: List<Maybe<T>>): List<T> =>
+  reject(items, item => !exists(item)) as List<T>
