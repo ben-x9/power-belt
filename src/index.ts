@@ -141,6 +141,7 @@ export const extract = <T extends Object>
       if (i >= 0) {
         match = content[i]
         content = remove(content, i)
+        if (content.length === 1) content = content[0]
       }
     }
   }
