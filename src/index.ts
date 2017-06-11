@@ -128,16 +128,29 @@ export const remove = <T>(list: List<T>, index: number): List<T> =>
 export interface DeepList<T> extends List<T | DeepList<T>> {}
 export type Deep<T> = T | DeepList<T>
 
-export const extract = <T extends Object>
-    (items: List<T>, predicate: Partial<T>):
-    {remaining: List<T>, match: Maybe<T>} => {
+export interface ExtractResult<T> {
+  readonly remaining: List<T>
+  readonly match: Maybe<T>
+}
+export function extract<T extends Object>
+  (items: List<T>, predicate: Partial<T>, callback: (item: T) => void): List<T>
+export function extract<T extends Object>
+  (items: List<T>, predicate: Partial<T>): ExtractResult<T>
+export function extract<T extends Object>(items: List<T>, predicate: Partial<T>,
+    callback?: (item: T) => void): ExtractResult<T> | List<T> {
   const key = Object.keys(predicate)[0] as keyof T
   const val = predicate[key]
   let match: Maybe<T> = null
   const i = findIndex(items, predicate)
+  let remaining = items
   if (i >= 0) {
     match = items[i]
-    items = remove(items, i)
+    remaining = remove(items, i)
   }
-  return {remaining: items, match}
+  if (callback) {
+    if (match) callback(match)
+    return remaining
+  } else {
+    return {remaining, match}
+  }
 }
