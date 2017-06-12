@@ -137,7 +137,7 @@ export function extract<T extends Object>
 export function extract<T extends Object>
   (items: List<T>, predicate: Partial<T>): ExtractResult<T>
 export function extract<T extends Object>(items: List<T>, predicate: Partial<T>,
-    callback?: (item: T) => Maybe<T>): ExtractResult<T> | List<T> {
+    callback?: (item: T) => void): ExtractResult<T> | List<T> {
   const key = Object.keys(predicate)[0] as keyof T
   const val = predicate[key]
   let match: Maybe<T> = null
@@ -148,10 +148,7 @@ export function extract<T extends Object>(items: List<T>, predicate: Partial<T>,
     remaining = remove(items, i)
   }
   if (callback) {
-    if (match) {
-      const result = callback(match)
-      if (result) remaining = append(remaining, result)
-    }
+    if (match) callback(match)
     return remaining
   } else {
     return {remaining, match}
