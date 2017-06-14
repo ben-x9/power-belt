@@ -1,5 +1,5 @@
 import {assert} from "chai"
-import {isArray, set, record, insert, append, prepend, clean} from "src"
+import { isArray, set, record, insert, append, prepend, clean, collect } from "src"
 
 describe("isArray", () => {
   it("should return true when passed an array", () => {
@@ -93,5 +93,31 @@ describe("clean", () => {
     const $array = clean(array)
     assert.notEqual($array as typeof array, array)
     assert.deepEqual($array, [1, 2, 4, 5])
+  })
+})
+
+describe("collect", () => {
+  it("should collect only the element that we processed", () => {
+    const arr = [1, 2, 3, 1, 2, 3, 1, 2, 3]
+
+    const collected = collect(arr, item => {
+      switch (item) {
+        case 1:
+          return 2
+        case 2:
+          return 4
+        default:
+          return null
+      }
+    })
+
+    assert.deepEqual(collected, [2, 4, 2, 4, 2, 4])
+  })
+
+  it("should collect nothing if no item match", () => {
+    const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+    const collected = collect(arr, item => null)
+    assert.deepEqual(collected, [])
   })
 })
