@@ -1,4 +1,4 @@
-import {some, findIndex, reject} from "lodash"
+import {some, findIndex, reject, assign} from "lodash"
 
 export const has = some
 
@@ -51,6 +51,18 @@ export type Nothing = null | undefined | void
 export type Maybe<T> = T | Nothing
 
 export interface HasId {id: string|number}
+
+export const cloneArray = <T>(array: T[]): T[] => array.slice()
+export const cloneList = <T>(list: List<T>): List<T> => list.slice()
+export const cloneObject = <T extends Object>(object: T): T =>
+  assign({}, object)
+export function clone<T>(list: List<T>): List<T>
+export function clone<T extends Object>(object: T): T
+export function clone<T>(item: List<T> | T): List<T> | T {
+  return isArray(item) ?
+    cloneArray(item) :
+    cloneObject(item)
+}
 
 export function set<T>(object: T, props: Partial<T>): T
 export function set<T, K extends keyof T>(object: T, key: K, val: T[K]): T
@@ -124,6 +136,14 @@ export const prepend = <T>(list: List<T>, val: Maybe<T>): List<T> =>
 
 export const remove = <T>(list: List<T>, index: number): List<T> =>
   set(list, index, null)
+
+export const move = <T>(list: List<T>, item: T, index: number): List<T> => {
+  const array = cloneArray(list as T[])
+  const oldIndex = findIndex(list, it => it === item)
+  array.splice(oldIndex, 1)
+  array.splice(index, 0, item)
+  return array
+}
 
 export interface DeepList<T> extends List<T | DeepList<T>> {}
 export type Deep<T> = T | DeepList<T>

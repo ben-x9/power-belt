@@ -1,5 +1,5 @@
 import {assert} from "chai"
-import { isArray, set, record, insert, append, prepend, clean, collect } from "src"
+import {isArray, set, record, insert, append, prepend, clean, collect, move} from "src"
 
 describe("isArray", () => {
   it("should return true when passed an array", () => {
@@ -119,5 +119,14 @@ describe("collect", () => {
 
     const collected = collect(arr, item => null)
     assert.deepEqual(collected, [])
+  })
+})
+
+describe("move", () => {
+  it("should move an element to a new position in the array", () => {
+    const array = ["one", "two", "four", "three"]
+    const $array = move(array, "four", 3)
+    assert.notEqual($array, array)
+    assert.deepEqual($array, ["one", "two", "three", "four"])
   })
 })
