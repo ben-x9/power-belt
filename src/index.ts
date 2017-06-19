@@ -162,14 +162,9 @@ export const clean = <T>(items: List<Maybe<T>>): List<T> =>
 export const collect = <T>(items: List<T>,
     fn: (item: T) => Maybe<T>): List<T> => {
   const collectedItems: Array<T> = []
-  const length = items.length
-
-  for (let i = 0; i < length; i++) {
-    const mappedItem = fn(items[i])
-
-    if (isDefined(mappedItem) && mappedItem !== null) {
-      collectedItems.push(mappedItem as T)
-    }
+  for (const item of items) {
+    const mappedItem = fn(item)
+    if (exists(mappedItem)) collectedItems.push(mappedItem)
   }
   return collectedItems
 }
