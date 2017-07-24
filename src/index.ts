@@ -188,3 +188,15 @@ export const collect = <T>(items: List<T>,
   }
   return collectedItems
 }
+
+export const merge = <T>(object: T, changes: Partial<T>) => {
+  const newObject = clone(object)
+  for (const prop in changes) {
+    if (changes.hasOwnProperty(prop)) {
+      const val = changes[prop]!
+      if (isDefined(val))
+        newObject[prop] = val
+    }
+  }
+  return newObject
+}

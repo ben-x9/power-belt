@@ -1,5 +1,5 @@
 import {assert} from "chai"
-import {isArray, set, record, insert, append, prepend, clean, collect, move} from "src"
+import {isArray, set, record, insert, append, prepend, clean, collect, move, merge} from "src"
 
 describe("isArray", () => {
   it("should return true when passed an array", () => {
@@ -128,5 +128,14 @@ describe("move", () => {
     const $array = move(array, "four", 3)
     assert.notEqual($array, array)
     assert.deepEqual($array, ["one", "two", "three", "four"])
+  })
+})
+
+describe("merge", () => {
+  it("should merge two objects, ignoring properties on the second object that are undefined", () => {
+    interface Item {a: number, b: number, c: number}
+    const item: Item = {a: 1, b: 2, c: 3}
+    const change: Partial<Item> = {a: undefined, b: undefined, c: 6}
+    assert.deepEqual(merge(item, change), {a: 1, b: 2, c: 6})
   })
 })
