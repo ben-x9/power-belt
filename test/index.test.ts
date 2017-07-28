@@ -138,4 +138,10 @@ describe("merge", () => {
     const change: Partial<Item> = {a: undefined, b: undefined, c: 6}
     assert.deepEqual(merge(item, change), {a: 1, b: 2, c: 6})
   })
+  it("should merge two objects, ignoring properties on the second object don't exist", () => {
+    interface Item {a: number, b: number, c: number}
+    const item: Item = {a: 1, b: 2, c: 3}
+    const change: Partial<Item> = {c: 6}
+    assert.deepEqual(merge(item, change), {a: 1, b: 2, c: 6})
+  })
 })
