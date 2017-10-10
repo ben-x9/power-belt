@@ -7,8 +7,8 @@
   "author": "Ben Lambert",
   "license": "MIT",
   "scripts": {
-    "install": "npm run build",
-    "build": "build.sh",
+    "preinstall": "./build.sh",
+    "build": "npm run build",
     "lint": "tslint -p tsconfig.json --type-check src/index.ts src/index.test.ts",
     "test": "mocha-webpack",
     "test:watch": "npm run test -- --watch",
