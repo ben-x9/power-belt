@@ -7,7 +7,7 @@
   "author": "Ben Lambert",
   "license": "MIT",
   "scripts": {
-    "preinstall": "./build.sh",
+    "preinstall": "cp tsconfig/build.json tsconfig.json;tsc;cp tsconfig/editor.json tsconfig.json",
     "build": "npm run build",
     "lint": "tslint -p tsconfig.json --type-check src/index.ts src/index.test.ts",
     "test": "mocha-webpack",
