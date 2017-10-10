@@ -8,7 +8,7 @@
   "license": "MIT",
   "scripts": {
     "preinstall": "cp tsconfig/build.json tsconfig.json;tsc;cp tsconfig/editor.json tsconfig.json",
-    "build": "npm run build",
+    "build": "tsc -d --outDir build src/index.ts",
     "lint": "tslint -p tsconfig.json --type-check src/index.ts src/index.test.ts",
     "test": "mocha-webpack",
     "test:watch": "npm run test -- --watch",
