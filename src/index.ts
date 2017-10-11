@@ -1,4 +1,4 @@
-import {some, findIndex, reject} from "lodash"
+import {some, findIndex, reject, assign} from "lodash"
 
 export const has = some
 
@@ -47,10 +47,22 @@ export const toList = <T>(content: ZeroOrMore<T>) =>
 
 export type Update<ActionT> = (update: ActionT) => void
 export type Guid = string
-export type Nothing = null | undefined
+export type Nothing = null | undefined | void
 export type Maybe<T> = T | Nothing
 
 export interface HasId {id: string|number}
+
+export const cloneArray = <T>(array: T[]): T[] => array.slice()
+export const cloneList = <T>(list: List<T>): List<T> => list.slice()
+export const cloneObject = <T extends Object>(object: T): T =>
+  assign({}, object)
+export function clone<T>(list: List<T>): List<T>
+export function clone<T extends Object>(object: T): T
+export function clone<T>(item: List<T> | T): List<T> | T {
+  return isArray(item) ?
+    cloneArray(item) :
+    cloneObject(item)
+}
 
 export function set<T>(object: T, props: Partial<T>): T
 export function set<T, K extends keyof T>(object: T, key: K, val: T[K]): T
@@ -125,6 +137,14 @@ export const prepend = <T>(list: List<T>, val: Maybe<T>): List<T> =>
 export const remove = <T>(list: List<T>, index: number): List<T> =>
   set(list, index, null)
 
+export const move = <T>(list: List<T>, item: T, index: number): List<T> => {
+  const array = cloneArray(list as T[])
+  const oldIndex = findIndex(list, it => it === item)
+  array.splice(oldIndex, 1)
+  array.splice(index, 0, item)
+  return array
+}
+
 export interface DeepList<T> extends List<T | DeepList<T>> {}
 export type Deep<T> = T | DeepList<T>
 
@@ -159,17 +179,24 @@ export const clean = <T>(items: List<Maybe<T>>): List<T> =>
   reject(items, item => !exists(item)) as List<T>
 
 
-export const collect = <T>(items: List<T>, 
-  fn: (item: T) => Maybe<T>): List<T> => {
-    const collectedItems: Array<T> = []
-    const length = items.length
-
-    for (let i = 0; i < length; i++) {
-      const mappedItem = fn(items[i])
-
-      if (isDefined(mappedItem) && mappedItem !== null) {
-        collectedItems.push(mappedItem as T)
-      }
-    }
-    return collectedItems
+export const collect = <T>(items: List<T>,
+    fn: (item: T) => Maybe<T>): List<T> => {
+  const collectedItems: Array<T> = []
+  for (const item of items) {
+    const mappedItem = fn(item)
+    if (exists(mappedItem)) collectedItems.push(mappedItem)
   }
+  return collectedItems
+}
+
+export const merge = <T>(object: T, changes: Partial<T>) => {
+  const newObject = clone(object)
+  for (const prop in changes) {
+    if (changes.hasOwnProperty(prop)) {
+      const val = changes[prop]!
+      if (isDefined(val))
+        newObject[prop] = val
+    }
+  }
+  return newObject
+}
