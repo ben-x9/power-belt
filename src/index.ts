@@ -1,6 +1,4 @@
-import {some, findIndex, reject, assign} from "lodash"
-
-export const has = some
+import {some as has, findIndex, reject, assign} from "lodash"
 
 export type something = boolean|number|string|object
 
