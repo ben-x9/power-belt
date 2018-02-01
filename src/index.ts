@@ -1,6 +1,4 @@
-import {some, findIndex, reject, assign} from "lodash"
-
-export const has = some
+import {some as has, findIndex, reject, assign} from "lodash"
 
 export type something = boolean|number|string|object
 
@@ -189,14 +187,18 @@ export const collect = <T>(items: List<T>,
   return collectedItems
 }
 
-export const merge = <T>(object: T, changes: Partial<T>) => {
-  const newObject = clone(object)
-  for (const prop in changes) {
-    if (changes.hasOwnProperty(prop)) {
-      const val = changes[prop]!
-      if (isDefined(val))
-        newObject[prop] = val
-    }
-  }
-  return newObject
+interface AnyObject {
+  [key: string]: any
+}
+
+export const merge = <T>(object: T, changes: Partial<T>): T => {
+  const unsafeChanges = changes as AnyObject
+  const unsafeObject = object as AnyObject
+  const changesWithoutUndefined = Object.keys(changes)
+    .reduce((newChanges, key) => {
+      if (isDefined(unsafeChanges[key]))
+        return newChanges[key] = unsafeObject[key]
+      return newChanges
+    }, {} as AnyObject)
+  return Object.assign(object, changesWithoutUndefined)
 }
